@@ -1,6 +1,6 @@
 # OCR
 
-SASD R&D Team local implementation of Optical Character Recognition.
+Implementation of Optical Character Recognition using Tesseract and PDFBox.
 
 ## Technology Used
 
@@ -49,15 +49,6 @@ github link: https://github.com/apache/pdfbox
 	<version>[2.0.15,)</version>
 <dependency>
 
-<!-- TU PDF Reader -->
-<dependency>
-	<groupId>com.rbank</groupId>
-	<artifactId>pdfextract-custom-rbank</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<scope>system</scope>
-	<systemPath>${project.basedir}/src/main/resources/pdfextract-custom-rbank-0.0.1-SNAPSHOT.jar</systemPath>
-</dependency>
-
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -82,7 +73,6 @@ Tesseract getTesseract() {
 ## Features
 - [Extract Text from Image](#extract-image-from-image)
 - [Extract Text from PDF](#extract-image-from-pdf)
-- [Get Json Response from TU PDF Reader](#get-json-response-from-tu-pdf-reader)
 - [ID Card Validation](#id-card-validation)
 
 
@@ -102,15 +92,6 @@ Tesseract getTesseract() {
 - upload pdf file containing text characters
 - returns extracted text characters
 ![](documentation/images/sample-ocr-pdf.png)
-
-[(Back to top)](#features)
-
-## Get Json Response from TU PDF Reader
-
-- link: http://localhost:8080/ocr/transunion
-- upload tu pdf document
-- returns parsed json response from tu-pdf-reader library
-![](documentation/images/sample-ocr-transunion.png)
 
 [(Back to top)](#features)
 
