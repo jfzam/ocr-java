@@ -25,7 +25,6 @@ github link: https://github.com/apache/pdfbox
 ## Setup
 
 - download https://github.com/tesseract-ocr/tessdata_best.git then move to `.\src\main\resources` folder
-- download `pdfextract-custom-rbank-0.0.1-SNAPSHOT.jar` then move to `.\src\main\resources` folder
 - Add the following maven dependencies
 ```xml
 <!-- Tess4J -->
