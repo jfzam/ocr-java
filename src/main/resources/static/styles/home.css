@@ -1,0 +1,12 @@
+html, body {
+	background-color: hsl(171, 100%, 41%);
+}
+
+
+
+.ocrx_word {
+	border-style: solid;
+	border-color: red;
+	border-width: 1px;
+	margin: 5px;
+}

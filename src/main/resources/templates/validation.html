@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Demo</title>
+<link rel="stylesheet" th:href="@{/styles/bulma.min.css}" />
+<link rel="stylesheet" th:href="@{/styles/demo.css}" />
+<script type="text/javascript" th:src="@{/js/actions.js}"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<link
+	href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;700&display=swap"
+	rel="stylesheet">
+<script src="https://kit.fontawesome.com/15181efa86.js"
+	crossorigin="anonymous"></script>
+</head>
+<body>
+	<br>
+	<br>
+	<section class="container">
+		<div class="tabs is-centered">
+			<ul>
+				<li><a th:href="@{/ocr/image}"> <span class="icon is-small"><i
+							class="fas fa-image" aria-hidden="true"></i></span> <span>Image</span>
+				</a></li>
+				<li><a th:href="@{/ocr/pdf}"> <span class="icon is-small"><i
+							class="fas fa-file-pdf" aria-hidden="true"></i></span> <span>PDF</span>
+				</a></li>
+				<li class="is-active"><a> <span class="icon is-small"><i
+							class="fas fa-id-card" aria-hidden="true"></i></span> <span>Validation</span>
+				</a></li>
+			</ul>
+		</div>
+	</section>
+	<section class="container">
+		<div class="columns is-multiline">
+			<div class="column is-12 panel">
+				<div class="columns">
+					<div class="column left">
+						<div class="card">
+							<div class="card-image">
+								<figure class="image is-4by3">
+									<img id="ocrimage" th:src="@{/img/640x480.png}">
+								</figure>
+							</div>
+						</div>
+						<div class="file mt-3">
+							<label class="file-label"> <input id="fileupload"
+								class="file-input" type="file"> <span class="file-cta">
+									<span class="file-icon"> <i class="fas fa-upload"></i>
+								</span> <span class="file-label"> Choose a file... </span>
+							</span>
+							</label>
+						</div>
+					</div>
+					<div class="column right">
+						<div class="field">
+							<div class="control">
+								<div id="idtype_select" class="select">
+									<select>
+										<option value=""> -- Select ID Type -- </option>
+								        <option value="PHILHEALTH">Philhealth</option>
+								        <option value="UNIFIED MULTIPURPOSE ID">Unified Multi-Purpose ID</option>
+								        <option value="PASAPORTE">Passport</option>
+								        <option value="DRIVERS LICENSE">Drivers License</option>
+									</select>
+								</div>
+							</div>
+							<p id="idtype_message" class="help"></p>
+						</div>
+						
+						<div class="field">
+							<label class="label">ID Number</label>
+							<div class="control has-icons-right">
+								<input id="idnumber_input" class="input" type="text" placeholder="Please input ID number..."> 
+								<span class="icon is-small is-right"><i id="idnumber_icon" class="fas"></i></span>
+							</div>
+							<p id="idnumber_message" class="help"></p>
+						</div>
+
+						<div class="field">
+							<label class="label">First name</label>
+							<div class="control has-icons-right">
+								<input id="firstname_input" class="input" type="text" placeholder="Please input first name..."> 
+								<span class="icon is-small is-right"><i id="firstname_icon" class="fas"></i></span>
+							</div>
+							<p id="firstname_message" class="help is-success"></p>
+						</div>
+						
+						<div class="field">
+							<label class="label">Middle name</label>
+							<div class="control has-icons-right">
+								<input id="middlename_input" class="input" type="text" placeholder="Please input middle name..."> 
+								<span class="icon is-small is-right"><i id="middlename_icon" class="fas"></i></span>
+							</div>
+							<p id="middlename_message" class="help"></p>
+						</div>
+						
+						<div class="field">
+							<label class="label">Last name</label>
+							<div class="control has-icons-right">
+								<input id="lastname_input" class="input" type="text" placeholder="Please input last name..."> 
+								<span class="icon is-small is-right"><i id="lastname_icon" class="fas"></i></span>
+							</div>
+							<p id="lastname_message" class="help"></p>
+						</div>
+						
+						<div class="control">
+							<button id="verify" class="button is-primary">Verify Information</button>
+						</div>
+						<p id="errormessage" class="is-error"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#loading").hide();
+		
+		$("#verify").click(function(event) {
+			
+			// set loading for submit button
+			$("#verify").addClass("is-loading");
+			
+			// reset id type classes
+			$("#idtype_select").removeClass("is-success");
+			$("#idtype_select").removeClass("is-danger");
+			$("#idtype_message").removeClass("is-success");
+			$("#idtype_message").removeClass("is-danger");
+			$("#idtype_message").text("");
+			
+			// reset id number classes
+			$("#idnumber_input").removeClass("is-success");
+			$("#idnumber_input").removeClass("is-danger");
+			$("#idnumber_icon").removeClass("fa-check");
+			$("#idnumber_icon").removeClass("fa-exclamation-triangle");
+			$("#idnumber_message").removeClass("is-success");
+			$("#idnumber_message").removeClass("is-danger");
+			$("#idnumber_message").text("");
+			
+			// reset first name classes
+			$("#firstname_input").removeClass("is-success");
+			$("#firstname_input").removeClass("is-danger");
+			$("#firstname_icon").removeClass("fa-check");
+			$("#firstname_icon").removeClass("fa-exclamation-triangle");
+			$("#firstname_message").removeClass("is-success");
+			$("#firstname_message").removeClass("is-danger");
+			$("#firstname_message").text("");
+			
+			// reset middle name classes
+			$("#middlename_input").removeClass("is-success");
+			$("#middlename_input").removeClass("is-danger");
+			$("#middlename_icon").removeClass("fa-check");
+			$("#middlename_icon").removeClass("fa-exclamation-triangle");
+			$("#middlename_message").removeClass("is-success");
+			$("#middlename_message").removeClass("is-danger");
+			$("#middlename_message").text("");
+			
+			// reset middle name classes
+			$("#lastname_input").removeClass("is-success");
+			$("#lastname_input").removeClass("is-danger");
+			$("#lastname_icon").removeClass("fa-check");
+			$("#lastname_icon").removeClass("fa-exclamation-triangle");
+			$("#lastname_message").removeClass("is-success");
+			$("#lastname_message").removeClass("is-danger");
+			$("#lastname_message").text("");
+
+			event.preventDefault();
+
+			var idtype = $("#idtype_select option:selected").val();
+			var idnumber = $("#idnumber_input").val();
+			var firstname = $("#firstname_input").val();
+			var middlename = $("#middlename_input").val();
+			var lastname = $("#lastname_input").val();
+			
+			var form = $("#fileupload").prop('files')[0];
+
+			console.log(idtype+", "+idnumber+", "+firstname+", "+middlename+", "+lastname);
+			
+
+			var data = new FormData();
+			
+			data.append("file", form);
+			data.append("idtype", idtype);
+			data.append("idnumber", idnumber);
+			data.append("firstname", firstname);
+			data.append("middlename", middlename);
+			data.append("lastname", lastname);
+
+			// disabled the submit button
+			$("#fileupload").prop("disabled", true);
+
+			$.ajax({
+				type : "POST",
+				enctype : 'multipart/form-data',
+				url : "/ocr-api/validate/card",
+				data : data,
+				processData : false,
+				contentType : false,
+				cache : false,
+				timeout : 1200000,
+				success : function(data) {
+					var out = JSON.parse(data);
+					console.log("SUCCESS : ", out);
+					$("#errormessage").val("");
+					
+					// ID Type
+					if (!!out.validation.idType) {
+						$("#idtype_select").addClass("is-success");
+						$("#idtype_message").addClass("is-success");
+						$("#idtype_message").text("ID Type is verified");
+					} else {
+						$("#idtype_select").addClass("is-danger");
+						$("#idtype_message").addClass("is-danger");
+						$("#idtype_message").text("ID Type is not found");
+					}
+					
+					// Id Number
+					if (!!out.validation.idNumber) {
+						$("#idnumber_input").addClass("is-success");
+						$("#idnumber_icon").addClass("fa-check");
+						$("#idnumber_message").addClass("is-success");
+						$("#idnumber_message").text("ID number is verified");
+					} else {
+						$("#idnumber_input").addClass("is-danger");
+						$("#idnumber_icon").addClass("fa-exclamation-triangle");
+						$("#idnumber_message").addClass("is-danger");
+						$("#idnumber_message").text("ID number is not found");
+					}
+
+					// First name 
+					if (!!out.validation.firstName) {
+						$("#firstname_input").addClass("is-success");
+						$("#firstname_icon").addClass("fa-check");
+						$("#firstname_message").addClass("is-success");
+						$("#firstname_message").text("First name is verified");
+					} else {
+						$("#firstname_input").addClass("is-danger");
+						$("#firstname_icon").addClass("fa-exclamation-triangle");
+						$("#firstname_message").addClass("is-danger");
+						$("#firstname_message").text("First name is not found");
+					}
+					
+					// Middle name
+					if (!!out.validation.middleName) {
+						$("#middlename_input").addClass("is-success");
+						$("#middlename_icon").addClass("fa-check");
+						$("#middlename_message").addClass("is-success");
+						$("#middlename_message").text("Middle name is verified");
+					} else {
+						$("#middlename_input").addClass("is-danger");
+						$("#middlename_icon").addClass("fa-exclamation-triangle");
+						$("#middlename_message").addClass("is-danger");
+						$("#middlename_message").text("Middle name is not found");
+					}
+					
+					// Last name
+					if (!!out.validation.lastName) {
+						$("#lastname_input").addClass("is-success");
+						$("#lastname_icon").addClass("fa-check");
+						$("#lastname_message").addClass("is-success");
+						$("#lastname_message").text("Last name is verified");
+					} else {
+						$("#lastname_input").addClass("is-danger");
+						$("#lastname_icon").addClass("fa-exclamation-triangle");
+						$("#lastname_message").addClass("is-danger");
+						$("#lastname_message").text("Last name is not found");
+					}
+
+				},
+				error : function(e) {
+					console.log("ERROR : ", e);
+					$("#errormessage").val(e.responseText);
+
+				},
+				complete : function(xhr, status) {
+					$("#fileupload").prop("disabled", false);
+					$("#verify").removeClass("is-loading");
+				}
+			});
+		})
+
+		$("#fileupload").change(function(event) {
+			
+			var form = event.target.files[0];
+			
+			if (form.size > 1048576) {
+				alert("Maximum file size to upload is 1MB. Please try to reduce its resolution to make it under 1MB.")
+			} 
+			else {
+				
+				var reader = new FileReader();
+				var imgtag = document.getElementById("ocrimage");
+
+				imgtag.title = form.name;
+
+				reader.onload = function(event) {
+					imgtag.src = event.target.result;
+				};
+
+				reader.readAsDataURL(form);
+			}
+		});
+
+	});
+</script>
+</html>

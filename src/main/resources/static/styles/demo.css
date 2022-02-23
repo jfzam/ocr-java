@@ -1,0 +1,77 @@
+body {
+	background: rgb(247, 247, 247);
+	height: 100vh;
+	color: var(- -textDark);
+}
+
+.field:not(:last-child) {
+	margin-bottom: 1rem;
+}
+
+.panel {
+	margin-top: 2rem;
+	background: white;
+	border-radius: 10px;
+}
+
+.left, .right {
+	padding: 4rem;
+}
+
+.left {
+	border-right: 5px solid var(- -background);
+}
+
+.left .title {
+	font-weight: 800;
+	letter-spacing: -2px;
+}
+
+.left .colored {
+	font-weight: 500;
+	margin-top: 1rem !important;
+	letter-spacing: -1px;
+}
+
+.left p {
+	color: var(- -textLight);
+	font-size: 1.15rem;
+}
+
+.right .title {
+	font-weight: 800;
+	letter-spacing: -1px;
+}
+
+.right .description {
+	margin-top: 1rem;
+	margin-bottom: 1rem !important;
+	color: var(- -textLight);
+	font-size: 1.15rem;
+}
+
+.right small {
+	color: var(- -textLight);
+}
+
+input {
+	font-size: 1rem;
+}
+
+input:focus {
+	border-color: var(- -brandColor) !important;
+	box-shadow: 0 0 0 1px var(- -brandColor) !important;
+}
+
+.fab, .fas {
+	color: hsl(171, 100%, 41%);
+	margin-right: 1rem;
+}
+
+.is-json-text {
+	font-family: "Lucida Console", "Courier New", monospace;
+	font-size: 12px;
+	white-space: pre;
+	overflow-wrap: normal;
+	overflow-x: scroll;
+}

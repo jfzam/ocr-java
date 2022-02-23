@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Demo</title>
+<link rel="stylesheet" th:href="@{/styles/bulma.min.css}" />
+<link rel="stylesheet" th:href="@{/styles/demo.css}" />
+<script type="text/javascript" th:src="@{/js/actions.js}"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<link
+	href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;700&display=swap"
+	rel="stylesheet">
+<script src="https://kit.fontawesome.com/15181efa86.js"
+	crossorigin="anonymous"></script>
+</head>
+<body>
+	<br>
+	<br>
+	<section class="container">
+		<div class="tabs is-centered">
+			<ul>
+				<li><a th:href="@{/ocr/image}"> <span class="icon is-small"><i
+							class="fas fa-image" aria-hidden="true"></i></span> <span>Image</span>
+				</a></li>
+				<li class="is-active"><a> <span class="icon is-small"><i
+							class="fas fa-file-pdf" aria-hidden="true"></i></span> <span>PDF</span>
+				</a></li>
+				<li><a th:href="@{/ocr/validation}"> <span class="icon is-small"><i
+							class="fas fa-id-card" aria-hidden="true"></i></span> <span>Validation</span>
+				</a></li>
+			</ul>
+		</div>
+	</section>
+	<section class="container">
+		<div class="columns is-multiline">
+			<div class="column is-12 panel">
+				<div class="columns">
+					<div class="column left">
+						<div class="card">
+							<iframe id="ocrpdf" style="height: 400px;" th:src="@{/img/default-pdf.pdf}" frameborder="0"
+								height="100%" width="100%"></iframe>
+						</div>
+						<div class="file mt-3">
+							<label class="file-label"> <input id="fileupload"
+								class="file-input" type="file"> <span class="file-cta">
+									<span class="file-icon"> <i class="fas fa-upload"></i>
+								</span> <span class="file-label"> Choose a file... </span>
+							</span>
+							</label>
+						</div>
+					</div>
+					<div class="column right">
+						<textarea id="resultarea" class="textarea is-primary" spellcheck="false"
+							placeholder="OCR result from image file..." rows="16"></textarea>
+						<progress id="loading" class="progress is-primary mt-3" max="100"></progress>
+						<p id="errormessage" class="is-error"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#loading").hide();
+
+		$("#fileupload").change(function(event) {
+			
+			var form = event.target.files[0];
+			
+			if (form.size > 5242880) {
+				alert("Maximum file size to upload is 5MB. Please try to reduce its resolution to make it under 5MB.")
+			} 
+			else {
+				$("#loading").show();
+
+				event.preventDefault();
+				
+				var reader = new FileReader();
+				var imgtag = document.getElementById("ocrpdf");
+				
+				imgtag.title = form.name;
+
+				reader.onload = function(event) {
+					imgtag.src = event.target.result;
+				};
+
+				reader.readAsDataURL(form);
+
+				var data = new FormData();
+				data.append("file", form);
+
+				// disabled the submit button
+				$("#fileupload").prop("disabled", true);
+
+				$.ajax({
+					type : "POST",
+					enctype : 'multipart/form-data',
+					url : "/ocr-api/extract/pdf",
+					data : data,
+					processData : false,
+					contentType : false,
+					cache : false,
+					timeout : 1200000,
+					success : function(data) {
+						var out = JSON.parse(data);
+						console.log("SUCCESS : ", out);
+						$("#resultarea").val(out.text);
+						$("#errormessage").val("");
+
+					},
+					error : function(e) {
+						console.log("ERROR : ", e);
+
+						$("#resultarea").val("");
+						$("#errormessage").val(e.responseText);
+
+					},
+					complete : function(xhr, status) {
+						$("#fileupload").prop("disabled", false);
+						$("#loading").hide();
+					}
+				});
+			}
+		});
+
+	});
+</script>
+</html>
